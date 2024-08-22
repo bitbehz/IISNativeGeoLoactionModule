@@ -1,0 +1,3 @@
+LIBRARY "IISModule"  
+EXPORTS  
+    RegisterModule  
