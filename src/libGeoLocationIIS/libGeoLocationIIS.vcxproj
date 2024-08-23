@@ -168,9 +168,6 @@
   <ItemGroup>
     <None Include="IISModule.def" />
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="IISGeoLocationSchema.xml" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

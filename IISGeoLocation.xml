@@ -1,0 +1,10 @@
+<configSchema>
+  <sectionSchema name="system.webServer/IISGeoLocation">
+    <attribute name="enabled" type="bool" defaultValue="true"/>
+    <attribute name="databasePath" type="string" defaultValue="c:\inetpub\GeoLite2-Country.mmdb" validationType="nonEmptyString"/>
+    <attribute name="mode" type="string" defaultValue="Tag"/>
+    <attribute name="countryList" type="string" defaultValue=""/>
+    <attribute name="exceptionIPs" type="string" defaultValue=""/>
+    <attribute name="isBehindProxy" type="bool" defaultValue="false"/>
+  </sectionSchema>
+</configSchema>

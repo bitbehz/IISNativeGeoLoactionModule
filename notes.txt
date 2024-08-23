@@ -1,0 +1,117 @@
+%SystemRoot%\SysWOW64\inetsrv
+
+%windir%\system32\inetsrv\config\schema
+    IISGeoLocation.xml
+       <configSchema>
+      <sectionSchema name="system.webServer/IISGeoLocation">
+        <attribute name="enabled" type="bool" defaultValue="true"/>
+        <attribute name="databasePath" type="string" defaultValue="c:\inetpub\GeoLite2-Country.mmdb" validationType="nonEmptyString"/>
+        <attribute name="mode" type="string" defaultValue="Tag"/>
+        <attribute name="countryList" type="string" defaultValue=""/>
+        <attribute name="exceptionIPs" type="string" defaultValue=""/>
+	    <attribute name="isBehindProxy" type="bool" defaultValue="false"/>
+      </sectionSchema>
+    </configSchema>
+
+
+
+%windir%\system32\inetsrv\config
+
+applicationHost.config
+        
+        <sectionGroup name="system.webServer">
+            <section name="IISGeoLocation" overrideModeDefault="Allow" allowDefinition="Everywhere" />
+        </sectionGroup>
+
+        <globalModules>
+            <add name="GeoLocation IIS" image="D:\Projects\Tools\GeoLocationFilter\NativeIISModule\libGeoLocationIIS\x64\Debug\libGeoLocationIIS.dll" preCondition="bitness64" />
+        </globalModules>
+
+
+Sample Config:
+-----------------------------
+<configuration>
+  <system.webServer>
+    <IISGeoLocation 
+      enabled="true" 
+      databasePath="" 
+      mode="Tag"
+      countryList="IR|US"
+      exceptionIPs="127.0.0.1|1:::|192.168.20.20"
+      isBehindProxy="true" />
+  </system.webServer>
+</configuration>
+
+
+
+
+X-Forwarded-Proto       https  (defacto)
+Front-End-Https         on     (microsoft)
+X-Forwarded-Protocol    https
+X-Forwarded-Ssl         on
+X-Url-Scheme            http
+
+
+X-Client-IP
+X-Cluster-Client-IP
+X-Original-Forwarded-For  (Similar to X-Forwarded-For, but may be used in scenarios where the X-Forwarded-For header is being modified or overwritten by a proxy.)
+True-Client-IP (Used by some CDNs (Content Delivery Networks) to pass the client’s IP address)
+CF-Connecting-IP (Used by Cloudflare to indicate the client’s IP address.)
+Fastly-Client-IP (Used by Fastly CDN to convey the client’s IP address.)
+X-ProxyUser-Ip
+
+
+Readme:
+
+This native iis module utilized MaxMinds geo-location database (geoip2) to filter or tag http requests.
+It has three working modes:
+Tag
+Allow
+Block
+
+Tag: adds X-COUNTRY http header with value equal to country's ISO 3166-1 alpha-2 code.
+this header can be used in web application accourdingly or can be use by other tools like iis url rewire to made decisions based on country code.
+
+Allow: Allows requests from countries listed in countryList property of the module.
+
+Allow: Blocks requests from countries listed in countryList property of the module.
+
+IP addresses provided in exceptionIPs property will accepted and only tag header will be added.
+
+if module is built with Debug mode an extra header named X-IP will be added with value of detecte ip address for testing and debuging.
+
+If your application server is behind a proxy by enabling isBehindProxy property, module tries to detect client ip address from stndards http headers for this pupose.
+The headers are as following:
+X-Forwarded-For  (de-facto standard)
+X-Client-IP
+X-Cluster-Client-IP
+X-Original-Forwarded-For  (Similar to X-Forwarded-For, but may be used in scenarios where the X-Forwarded-For header is being modified or overwritten by a proxy.)
+True-Client-IP (Used by some CDNs (Content Delivery Networks) to pass the client’s IP address)
+CF-Connecting-IP (Used by Cloudflare to indicate the client’s IP address.)
+Fastly-Client-IP (Used by Fastly CDN to convey the client’s IP address.)
+X-ProxyUser-Ip
+
+
+This module is developed using visula studio 2022
+
+
+for installing module on the server, after building the project you should install the module on iis.
+iis should be installed and running. for installing the module you should add the following sections to your ... file located at ....
+
+<sectionGroup name="system.webServer">
+            <section name="IISGeoLocation" overrideModeDefault="Allow" allowDefinition="Everywhere" />
+        </sectionGroup>
+
+        <globalModules>
+            <add name="GeoLocation IIS" image="D:\Projects\Tools\GeoLocationFilter\NativeIISModule\libGeoLocationIIS\x64\Debug\libGeoLocationIIS.dll" preCondition="bitness64" />
+        </globalModules>
+also file IISGeoLocation.xml included in root directory should be copied in %windir%\system32\inetsrv\config\schema directory
+then restart the iis.
+
+in Debug mode module is verbose and can be used for diagnosting.
+
+license is gnu v3
+
+
+    
+

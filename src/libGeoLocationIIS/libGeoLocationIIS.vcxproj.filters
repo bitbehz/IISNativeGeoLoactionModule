@@ -62,7 +62,4 @@
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="IISGeoLocationSchema.xml" />
-  </ItemGroup>
 </Project>
