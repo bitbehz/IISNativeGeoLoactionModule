@@ -1,0 +1,39 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Visual Studio
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Build Debug DLL
+      run: |
+        msbuild /p:Configuration=Debug /p:Platform=x64 src/libGeoLocationIIS.sln
+        mkdir output/Debug
+        copy /Y src\x64\Debug\libGeoLocationIIS.dll output\Debug\libGeoLocationIIS.dll
+
+    - name: Build Release DLL
+      run: |
+        msbuild /p:Configuration=Release /p:Platform=x64 src/libGeoLocationIIS.sln
+        mkdir output/Release
+        copy /Y src\x64\Release\libGeoLocationIIS.dll output\Release\libGeoLocationIIS.dll
+
+    - name: Zip artifacts
+      run: |
+        mkdir dist
+        tar -cvzf dist/Debug.tar.gz -C output/Debug .
+        tar -cvzf dist/Release.tar.gz -C output/Release .
+
+    
