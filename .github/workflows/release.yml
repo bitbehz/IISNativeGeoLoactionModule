@@ -17,6 +17,15 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+        
+    - name: Install vcpkg (for dependency management)
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+
+    - name: Install MaxMindDB C library via vcpkg
+      run: |
+        .\vcpkg\vcpkg install libmaxminddb:x64-windows
 
     - name: Build Debug DLL
       run: |
