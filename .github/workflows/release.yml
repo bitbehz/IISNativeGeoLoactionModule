@@ -38,13 +38,13 @@ jobs:
         .\vcpkg\vcpkg integrate install
         msbuild /p:Configuration=Debug /p:Platform=x64 /p:VcpkgTriplet=x64-windows /p:VcpkgEnabled=true src/libGeoLocationIIS.sln
         mkdir output/Debug
-        copy /Y src\x64\Debug\libGeoLocationIIS.dll output\Debug\libGeoLocationIIS.dll
+        Copy-Item -Path src\x64\Debug\libGeoLocationIIS.dll -Destination output\Debug\libGeoLocationIIS.dll -Force
 
     - name: Build Release DLL with vcpkg integration
       run: |
         msbuild /p:Configuration=Release /p:Platform=x64 /p:VcpkgTriplet=x64-windows /p:VcpkgEnabled=true src/libGeoLocationIIS.sln
         mkdir output/Release
-        copy /Y src\x64\Release\libGeoLocationIIS.dll output\Release\libGeoLocationIIS.dll
+        Copy-Item -Path src\x64\Release\libGeoLocationIIS.dll -Destination output\Release\libGeoLocationIIS.dll -Force
 
 
     - name: Zip artifacts
