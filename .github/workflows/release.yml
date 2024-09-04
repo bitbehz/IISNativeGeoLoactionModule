@@ -27,17 +27,25 @@ jobs:
       run: |
         .\vcpkg\vcpkg install libmaxminddb:x64-windows
 
-    - name: Build Debug DLL
+    # Integrate vcpkg toolchain with Visual Studio and msbuild
+    - name: Set VCPKG environment variables
       run: |
-        msbuild /p:Configuration=Debug /p:Platform=x64 src/libGeoLocationIIS.sln
+        echo "VCPKG_ROOT=$(pwd)/vcpkg" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_TRIPLET=x64-windows" >> $GITHUB_ENV
+
+    - name: Build Debug DLL with vcpkg integration
+      run: |
+        .\vcpkg\vcpkg integrate install
+        msbuild /p:Configuration=Debug /p:Platform=x64 /p:VcpkgTriplet=x64-windows /p:VcpkgEnabled=true src/libGeoLocationIIS.sln
         mkdir output/Debug
         copy /Y src\x64\Debug\libGeoLocationIIS.dll output\Debug\libGeoLocationIIS.dll
 
-    - name: Build Release DLL
+    - name: Build Release DLL with vcpkg integration
       run: |
-        msbuild /p:Configuration=Release /p:Platform=x64 src/libGeoLocationIIS.sln
+        msbuild /p:Configuration=Release /p:Platform=x64 /p:VcpkgTriplet=x64-windows /p:VcpkgEnabled=true src/libGeoLocationIIS.sln
         mkdir output/Release
         copy /Y src\x64\Release\libGeoLocationIIS.dll output\Release\libGeoLocationIIS.dll
+
 
     - name: Zip artifacts
       run: |
