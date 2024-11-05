@@ -66,7 +66,7 @@ jobs:
       run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
       
     - name: Check version
-      run: echo "Version is $VERSION"
+      run: echo "Version is $(VERSION)"
 
     - name: Create GitHub Release
       id: create_release
